@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MiniCstructor.ProductDatabase
+namespace MiniCstructor.Database
 {
     public class Class1
     {
