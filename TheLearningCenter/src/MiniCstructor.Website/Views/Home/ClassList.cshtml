@@ -1,0 +1,14 @@
+﻿@model MiniCstructor.Website.Models.ClassListModel
+@{
+    ViewBag.Title = "List of Classes";
+}
+
+<h1>Classes</h1>
+
+@String.Format("{0} - {1} - {2:c} - ", "Name", "Description", "Price")
+<br />
+@foreach (var forClass in Model.Classes)
+{
+    @String.Format("{0} - {1} - {2:c} - ", forClass.Name, forClass.Description, forClass.Price)
+    <br />
+}

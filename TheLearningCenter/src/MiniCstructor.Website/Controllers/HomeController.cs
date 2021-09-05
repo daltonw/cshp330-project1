@@ -17,9 +17,12 @@ namespace MiniCstructor.Website.Controllers
     public class HomeController : Controller
     {
         private readonly IUserManager userManager;
-        public HomeController(IUserManager userManager)
+        private readonly IClassManager classManager;
+        public HomeController(IUserManager userManager,
+                              IClassManager classManager)
         {
             this.userManager = userManager;
+            this.classManager = classManager;
         }
         public IActionResult Index()
         {
@@ -158,6 +161,14 @@ namespace MiniCstructor.Website.Controllers
             }
 
             return View();
+        }
+        public ActionResult ClassList()
+        {
+            var classes = classManager.Classes
+                .Select(t => new MiniCstructor.Website.Models.ClassModel(t.Id, t.Name, t.Description, t.Price))
+                .ToArray();
+            var model = new ClassListModel { Classes = classes };
+            return View(model);
         }
     }
 }

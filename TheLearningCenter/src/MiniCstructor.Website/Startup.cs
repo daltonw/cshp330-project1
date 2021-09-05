@@ -32,6 +32,8 @@ namespace MiniCstructor.Website
         {
             services.AddSingleton<IUserManager, UserManager>();
             services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IClassManager, ClassManager>();
+            services.AddSingleton<IClassRepository, ClassRepository>();
             services.AddSession();
 
             services.Configure<CookiePolicyOptions>(options =>
