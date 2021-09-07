@@ -34,6 +34,8 @@ namespace MiniCstructor.Website
             services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<IClassManager, ClassManager>();
             services.AddSingleton<IClassRepository, ClassRepository>();
+            services.AddSingleton<IEnrollManager, EnrollManager>();
+            services.AddSingleton<IEnrollRepository, EnrollRepository>();
             services.AddSession();
 
             services.Configure<CookiePolicyOptions>(options =>
@@ -46,8 +48,8 @@ namespace MiniCstructor.Website
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            //services.AddDefaultIdentity<IdentityUser>()
+            //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>

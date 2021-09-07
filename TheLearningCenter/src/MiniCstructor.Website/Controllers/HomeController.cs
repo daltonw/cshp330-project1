@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MiniCstructor.Website.Controllers
 {
@@ -18,11 +19,14 @@ namespace MiniCstructor.Website.Controllers
     {
         private readonly IUserManager userManager;
         private readonly IClassManager classManager;
+        private readonly IEnrollManager enrollManager;
         public HomeController(IUserManager userManager,
-                              IClassManager classManager)
+                              IClassManager classManager,
+                              IEnrollManager enrollManager)
         {
             this.userManager = userManager;
             this.classManager = classManager;
+            this.enrollManager = enrollManager;
         }
         public IActionResult Index()
         {
@@ -56,6 +60,8 @@ namespace MiniCstructor.Website.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [HttpGet]
         public ActionResult LogIn()
         {
             ViewData["ReturnUrl"] = Request.Query["returnUrl"];
@@ -138,6 +144,7 @@ namespace MiniCstructor.Website.Controllers
             return Redirect("~/");
         }
 
+        [HttpGet]
         public ActionResult Register()
         {
             return View();
@@ -170,5 +177,54 @@ namespace MiniCstructor.Website.Controllers
             var model = new ClassListModel { Classes = classes };
             return View(model);
         }
+
+        [Authorize]
+        public ActionResult EnrollInClass()
+        {
+            var classes = classManager.Classes
+                .Select(t => new MiniCstructor.Website.Models.ClassModel(t.Id, t.Name, t.Description, t.Price))
+                .ToArray();
+            var model = new ClassListModel { Classes = classes };
+
+            ViewBag.message = model;
+            return View(model);
+        }
+
+        [Authorize]
+        public ActionResult AddClass(int id)
+        {
+            var user = JsonConvert.DeserializeObject<Models.UserModel>(HttpContext.Session.GetString("User"));
+
+            if (user == null)
+            {
+                return RedirectToAction("LogIn");
+            }
+
+            enrollManager.Add(user.Id, id);
+
+            return RedirectToAction("StudentClasses");
+        }
+
+        [Authorize]
+        public ActionResult StudentClasses()
+        {
+            var userJson = HttpContext.Session.GetString("User");
+            var user = JsonConvert.DeserializeObject<Models.UserModel>(userJson);
+
+            var classes = enrollManager.GetAll(user.Id)
+                .Select(t => new MiniCstructor.Website.Models.EnrollInClassModel
+                {
+                    UserId = t.UserId,
+                    ClassId = t.ClassId,
+                    ClassName = t.ClassName,
+                    Description = t.Description,
+                    Price = t.Price
+                })
+                .ToArray();
+
+            return View(classes);
+        }
+
+
     }
 }

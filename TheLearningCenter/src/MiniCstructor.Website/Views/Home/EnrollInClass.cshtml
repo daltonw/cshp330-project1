@@ -1,0 +1,74 @@
+﻿@model MiniCstructor.Website.Models.ClassListModel
+
+@{
+    ViewBag.Title = "Enroll In Class";
+}
+
+<h2>Enroll In Class</h2>
+
+@*@foreach (var forClass in Model.Classes)
+    {
+        @String.Format("{0}", forClass.Name)
+        <a asp-action="AddClass" asp-route-id="@forClass.Id">Add Class</a>
+        <br />
+    }
+
+    @for (int i = 0; i < Model.Classes.Length; i++)
+    {
+        @String.Format("{0}", Model.Classes[i].Name)
+    }*@
+
+<select>
+    @{
+        foreach (var forClass in Model.Classes)
+        {
+            <option>
+                @forClass.Name
+            </option>
+
+        }
+    }
+</select>
+
+<input asp-action="AddClass" asp-route-id="" type="submit" value="Add Class" class="btn btn-default">
+<br />
+<br />
+<br />
+<br />
+
+<table class="table">
+    <tr>
+        <th>
+            Class Name
+        </th>
+        <th>
+            Description
+        </th>
+        <th>
+            Price
+        </th>
+        <th>
+            Enroll
+        </th>
+    </tr>
+
+    @foreach (var item in Model.Classes)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                <a asp-action="AddClass" asp-route-id="@item.Id">Add Class</a>
+            </td>
+        </tr>
+    }
+</table>
+
+

@@ -5,6 +5,7 @@ namespace MiniCstructor.Repository
     public interface IClassRepository
     {
         ClassModel[] Classes { get; }
+        ClassModel GetClass(int classId);
     }
 
     public class ClassModel
@@ -23,8 +24,8 @@ namespace MiniCstructor.Repository
             {
                 return DatabaseAccessor.Instance.Class
                                        .Select(t => new ClassModel
-                                       { 
-                                           Id = t.ClassId, 
+                                       {
+                                           Id = t.ClassId,
                                            Name = t.ClassName,
                                            Description = t.ClassDescription,
                                            Price = t.ClassPrice
@@ -32,5 +33,18 @@ namespace MiniCstructor.Repository
                                        .ToArray();
             }
         }
+        public ClassModel GetClass(int classId)
+        {
+            var forClass = DatabaseAccessor.Instance.Class.First(t => t.ClassId == classId);
+
+            return new ClassModel
+            {
+                Id = forClass.ClassId,
+                Name = forClass.ClassName,
+                Description = forClass.ClassDescription,
+                Price = forClass.ClassPrice
+            };
+        }
     }
+
 }
