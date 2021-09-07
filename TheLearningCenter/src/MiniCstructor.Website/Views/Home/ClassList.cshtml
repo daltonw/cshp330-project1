@@ -5,10 +5,41 @@
 
 <h1>Classes</h1>
 
-@String.Format("{0} - {1} - {2:c} - ", "Name", "Description", "Price")
+@*@String.Format("{0} - {1} - {2:c} - ", "Name", "Description", "Price")
 <br />
 @foreach (var forClass in Model.Classes)
 {
     @String.Format("{0} - {1} - {2:c} - ", forClass.Name, forClass.Description, forClass.Price)
     <br />
-}
+}*@
+
+
+<table class="table">
+    <tr>
+        <th>
+            Class Name
+        </th>
+        <th>
+            Description
+        </th>
+        <th>
+            Price
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Classes)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+        </tr>
+    }
+</table>
